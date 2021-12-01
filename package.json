@@ -1,0 +1,19 @@
+{
+  "name": "full-stack-open-2021-part13-using-relational-databases",
+  "version": "0.0.1",
+  "description": "",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeleppane/full-stack-open-2021-part13-using-relational-databases.git"
+  },
+  "author": "Mikko Leppänen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikeleppane/full-stack-open-2021-part13-using-relational-databases/issues"
+  },
+  "homepage": "https://github.com/mikeleppane/full-stack-open-2021-part13-using-relational-databases#readme"
+}
