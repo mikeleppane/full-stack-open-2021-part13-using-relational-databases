@@ -4,7 +4,10 @@
   "description": "",
   "main": "cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "cli": "NODE_ENV=production node cli.js",
+    "lint": "eslint './**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,20 @@
   "bugs": {
     "url": "https://github.com/mikeleppane/full-stack-open-2021-part13-using-relational-databases/issues"
   },
-  "homepage": "https://github.com/mikeleppane/full-stack-open-2021-part13-using-relational-databases#readme"
+  "homepage": "https://github.com/mikeleppane/full-stack-open-2021-part13-using-relational-databases#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.1",
+    "sequelize": "^6.12.0-alpha.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "prettier": "^2.5.0"
+  }
 }
