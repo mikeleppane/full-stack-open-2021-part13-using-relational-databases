@@ -6,6 +6,7 @@ const unknownEndpoint = require("../controllers/unknownEndpoint");
 const errorHandler = require("../middleware/errorHandler");
 const userRouter = require("../controllers/users");
 const loginRouter = require("../controllers/login");
+const authorRouter = require("../controllers/authors");
 
 const setupRoutes = (app) => {
   app.use(cors());
@@ -14,6 +15,7 @@ const setupRoutes = (app) => {
   app.use("/api/blogs", blogRouter);
   app.use("/api/users", userRouter);
   app.use("/api/login", loginRouter);
+  app.use("/api/authors", authorRouter);
   app.use(unknownEndpoint);
   app.use(errorHandler);
 };
