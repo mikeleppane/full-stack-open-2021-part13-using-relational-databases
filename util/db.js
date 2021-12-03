@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const { POSTGRES_URI } = require("./config");
+const Umzug = require("umzug");
 
 const sequelize = new Sequelize(POSTGRES_URI, {
   dialectOptions: {
@@ -10,9 +11,48 @@ const sequelize = new Sequelize(POSTGRES_URI, {
   },
 });
 
+const migrationConf = {
+  storage: "sequelize",
+  storageOptions: {
+    sequelize,
+    tableName: "migrations",
+  },
+  migrations: {
+    params: [sequelize.getQueryInterface()],
+    path: `${process.cwd()}/migrations`,
+    pattern: /\.js$/,
+  },
+};
+
+const runMigrations = async () => {
+  const migrator = new Umzug({
+    storage: "sequelize",
+    storageOptions: {
+      sequelize,
+      tableName: "migrations",
+    },
+    migrations: {
+      params: [sequelize.getQueryInterface()],
+      path: `${process.cwd()}/migrations`,
+      pattern: /\.js$/,
+    },
+  });
+  const migrations = await migrator.up();
+  console.log("Migrations up to date", {
+    files: migrations.map((mig) => mig.file),
+  });
+};
+
+const rollbackMigration = async () => {
+  await sequelize.authenticate();
+  const migrator = new Umzug(migrationConf);
+  await migrator.down();
+};
+
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
+    await runMigrations();
     console.log("database connected");
   } catch (err) {
     console.log("connecting database failed");
@@ -22,4 +62,4 @@ const connectToDatabase = async () => {
   return null;
 };
 
-module.exports = { connectToDatabase, sequelize };
+module.exports = { connectToDatabase, sequelize, rollbackMigration };

@@ -7,7 +7,8 @@
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development nodemon index.js",
     "cli": "NODE_ENV=production node cli.js",
-    "lint": "eslint './**/*.js'"
+    "lint": "eslint './**/*.js'",
+    "migration:down": "node util/rollback.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,8 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "pg": "^8.7.1",
-    "sequelize": "^6.12.0-alpha.1"
+    "sequelize": "^6.12.0-alpha.1",
+    "umzug": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^8.3.0",
