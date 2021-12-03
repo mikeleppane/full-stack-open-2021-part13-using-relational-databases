@@ -17,6 +17,26 @@ userRouter.post("/", async (req, res) => {
   res.json(user);
 });
 
+userRouter.get("/:id", async (req, res) => {
+  const user = await User.findByPk(req.params.id, {
+    include: {
+      model: Blog,
+      attributes: { exclude: ["userId", "read", "createdAt", "updatedAt"] },
+    },
+  });
+  if (user) {
+    const modUser = {
+      name: user.name,
+      username: user.username,
+      readings: user.blogs,
+    };
+    console.log(JSON.stringify(modUser, null, 2));
+    res.json(modUser);
+  } else {
+    res.status(404).end();
+  }
+});
+
 userRouter.get("/:username", userFinder, async (req, res) => {
   const user = req.user;
   if (user) {
