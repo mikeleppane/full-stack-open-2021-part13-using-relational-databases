@@ -9,9 +9,9 @@ authorRouter.get("/", async (req, res) => {
     attributes: [
       "author",
       [sequelize.fn("count", sequelize.col("title")), "blogs"],
-      [sequelize.fn("max", sequelize.col("likes")), "likes"],
-      //   [sequelize.fn("COUNT", sequelize.col("likes")), "n_likes"],
+      [sequelize.fn("sum", sequelize.col("likes")), "likes"],
     ],
+    order: [[sequelize.col("likes"), "DESC"]],
   });
   console.log(JSON.stringify(blogs, null, 2));
   res.json(blogs);
