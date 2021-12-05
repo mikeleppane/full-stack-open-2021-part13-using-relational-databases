@@ -36,17 +36,35 @@ userRouter.get("/:id", async (req, res) => {
     ],
   });
   if (user) {
-    const readings = user.markedReadings.map((reading) => {
-      return {
-        id: reading.id,
-        url: reading.url,
-        title: reading.title,
-        author: reading.author,
-        likes: reading.likes,
-        year: reading.year,
-        readinglists: { id: reading.readinglist.id, read: reading.read },
-      };
-    });
+    let readings;
+    if (req.query.read) {
+      readings = user.markedReadings
+        .filter((reading) => reading.read.toString() === req.query.read)
+        .map((reading) => {
+          return {
+            id: reading.id,
+            url: reading.url,
+            title: reading.title,
+            author: reading.author,
+            likes: reading.likes,
+            year: reading.year,
+            readinglists: { id: reading.readinglist.id, read: reading.read },
+          };
+        });
+    } else {
+      readings = user.markedReadings.map((reading) => {
+        return {
+          id: reading.id,
+          url: reading.url,
+          title: reading.title,
+          author: reading.author,
+          likes: reading.likes,
+          year: reading.year,
+          readinglists: { id: reading.readinglist.id, read: reading.read },
+        };
+      });
+    }
+
     const modUser = {
       name: user.name,
       username: user.username,
