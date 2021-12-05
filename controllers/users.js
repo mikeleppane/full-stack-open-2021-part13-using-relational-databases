@@ -19,16 +19,38 @@ userRouter.post("/", async (req, res) => {
 
 userRouter.get("/:id", async (req, res) => {
   const user = await User.findByPk(req.params.id, {
-    include: {
-      model: Blog,
-      attributes: { exclude: ["userId", "read", "createdAt", "updatedAt"] },
-    },
+    include: [
+      {
+        model: Blog,
+        as: "markedReadings",
+        attributes: {
+          include: ["url", "title", "author", "likes", "year", "read"],
+          exclude: ["createdAt", "updatedAt", "userId"],
+        },
+        through: {
+          attributes: {
+            exclude: ["userId", "blogId"],
+          },
+        },
+      },
+    ],
   });
   if (user) {
+    const readings = user.markedReadings.map((reading) => {
+      return {
+        id: reading.id,
+        url: reading.url,
+        title: reading.title,
+        author: reading.author,
+        likes: reading.likes,
+        year: reading.year,
+        readinglists: { id: reading.readinglist.id, read: reading.read },
+      };
+    });
     const modUser = {
       name: user.name,
       username: user.username,
-      readings: user.blogs,
+      readings: readings,
     };
     console.log(JSON.stringify(modUser, null, 2));
     res.json(modUser);
