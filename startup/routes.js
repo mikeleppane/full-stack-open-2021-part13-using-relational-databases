@@ -8,6 +8,7 @@ const userRouter = require("../controllers/users");
 const loginRouter = require("../controllers/login");
 const authorRouter = require("../controllers/authors");
 const readinglistRouter = require("../controllers/readinglists");
+const logoutRouter = require("../controllers/logout");
 
 const setupRoutes = (app) => {
   app.use(cors());
@@ -16,6 +17,7 @@ const setupRoutes = (app) => {
   app.use("/api/blogs", blogRouter);
   app.use("/api/users", userRouter);
   app.use("/api/login", loginRouter);
+  app.use("/api/logout", logoutRouter);
   app.use("/api/authors", authorRouter);
   app.use("/api/readinglists", readinglistRouter);
   app.use(unknownEndpoint);

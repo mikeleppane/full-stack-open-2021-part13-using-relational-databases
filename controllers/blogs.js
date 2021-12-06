@@ -6,6 +6,7 @@ const tokenExtractor = require("../middleware/tokenExtractor");
 const User = require("../models/user");
 const { Op } = require("sequelize");
 const { sequelize } = require("../util/db");
+const sessionValidator = require("../middleware/sessionValidator");
 
 blogRouter.get("/", async (req, res) => {
   let where = {};
@@ -35,7 +36,7 @@ blogRouter.get("/", async (req, res) => {
   res.json(blogs);
 });
 
-blogRouter.post("/", tokenExtractor, async (req, res) => {
+blogRouter.post("/", tokenExtractor, sessionValidator, async (req, res) => {
   const user = await User.findByPk(req.decodedToken.id);
   const blog = await Blog.create({ ...req.body, userId: user.id });
   console.log(JSON.stringify(blog, null, 2));
@@ -51,19 +52,25 @@ blogRouter.get("/:id", blogFinder, async (req, res) => {
   }
 });
 
-blogRouter.delete("/:id", tokenExtractor, blogFinder, async (req, res) => {
-  const user = await User.findByPk(req.decodedToken.id);
-  const blog = req.blog;
-  const isValidUser = user.id === blog.userId;
-  if (isValidUser) {
-    if (blog) {
-      await blog.destroy();
-    } else {
-      res.status(404).json({ error: "invalid id" }).end();
+blogRouter.delete(
+  "/:id",
+  tokenExtractor,
+  sessionValidator,
+  blogFinder,
+  async (req, res) => {
+    const user = await User.findByPk(req.decodedToken.id);
+    const blog = req.blog;
+    const isValidUser = user.id === blog.userId;
+    if (isValidUser) {
+      if (blog) {
+        await blog.destroy();
+      } else {
+        res.status(404).json({ error: "invalid id" }).end();
+      }
+      res.status(204).end();
     }
-    res.status(204).end();
   }
-});
+);
 
 blogRouter.put("/:id", blogFinder, async (req, res) => {
   const blog = req.blog;
