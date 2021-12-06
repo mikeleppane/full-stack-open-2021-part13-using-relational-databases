@@ -18,16 +18,20 @@ userRouter.post("/", async (req, res) => {
 });
 
 userRouter.get("/:id", async (req, res) => {
+  const where = {};
+  if (req.query.read) {
+    where.read = req.query.read;
+  }
   const user = await User.findByPk(req.params.id, {
     include: [
       {
         model: Blog,
-        as: "markedReadings",
         attributes: {
-          include: ["url", "title", "author", "likes", "year", "read"],
+          include: ["url", "title", "author", "likes", "year"],
           exclude: ["createdAt", "updatedAt", "userId"],
         },
         through: {
+          where: where,
           attributes: {
             exclude: ["userId", "blogId"],
           },
@@ -35,40 +39,12 @@ userRouter.get("/:id", async (req, res) => {
       },
     ],
   });
+  console.log(JSON.stringify(user, null, 2));
   if (user) {
-    let readings;
-    if (req.query.read) {
-      readings = user.markedReadings
-        .filter((reading) => reading.read.toString() === req.query.read)
-        .map((reading) => {
-          return {
-            id: reading.id,
-            url: reading.url,
-            title: reading.title,
-            author: reading.author,
-            likes: reading.likes,
-            year: reading.year,
-            readinglists: { id: reading.readinglist.id, read: reading.read },
-          };
-        });
-    } else {
-      readings = user.markedReadings.map((reading) => {
-        return {
-          id: reading.id,
-          url: reading.url,
-          title: reading.title,
-          author: reading.author,
-          likes: reading.likes,
-          year: reading.year,
-          readinglists: { id: reading.readinglist.id, read: reading.read },
-        };
-      });
-    }
-
     const modUser = {
       name: user.name,
       username: user.username,
-      readings: readings,
+      readings: user.blogs,
     };
     console.log(JSON.stringify(modUser, null, 2));
     res.json(modUser);

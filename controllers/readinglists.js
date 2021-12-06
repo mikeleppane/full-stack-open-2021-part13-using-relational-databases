@@ -3,7 +3,6 @@ const readinglistRouter = require("express").Router();
 const User = require("../models/user");
 const Readinglist = require("../models/readinglist");
 const tokenExtractor = require("../middleware/tokenExtractor");
-const Blog = require("../models/blog");
 
 readinglistRouter.post("/", tokenExtractor, async (req, res) => {
   if (!req.body.blog_id) {
@@ -55,14 +54,17 @@ readinglistRouter.put("/:id", tokenExtractor, async (req, res) => {
       error: "Cannot find any readinglist for a user.",
     });
   }
-  const blog = await Blog.findByPk(req.params.id);
 
-  blog.read = req.body.read;
-  await blog.save();
+  readinglist.read = req.body.read;
+  await readinglist.save();
   console.log(
-    `Blog updated and saved successfully: ${JSON.stringify(blog, null, 2)}`
+    `Readinglist updated and saved successfully: ${JSON.stringify(
+      readinglist,
+      null,
+      2
+    )}`
   );
-  res.json(blog);
+  res.json(readinglist);
 });
 
 module.exports = readinglistRouter;

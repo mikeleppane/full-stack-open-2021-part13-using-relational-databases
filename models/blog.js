@@ -34,11 +34,6 @@ Blog.init(
         max: new Date().getFullYear(),
       },
     },
-    read: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
   },
   {
     sequelize,
